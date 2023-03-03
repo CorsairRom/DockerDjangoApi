@@ -20,6 +20,9 @@ etapa = [
 class Usuario(models.Model):
     username = models.CharField(max_length=50, unique=True)
     password = models.CharField(max_length=50)
+    
+    def __str__(self):
+        return self.username
 
 class Cliente(models.Model):
     nombre_empresa = models.CharField(max_length=200)
@@ -28,11 +31,33 @@ class Cliente(models.Model):
     telefono = models.IntegerField()
     user = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     
+    def __str__(self):
+        return self.nombre_empresa
+    
 class Estado(models.Model):
-    estado = models.CharField(choices=estado)
+    estado = models.CharField(choices=estado, max_length=50)
+    
+    def __str__(self):
+        return self.estado
 
 class Etapa(models.Model):
-    etapa = models.CharField(choices=etapa)
+    etapa = models.CharField(choices=etapa, max_length=50)
+    
+    def __str__(self):
+        return self.etapa
+    
+class Prospecto(models.Model):
+    nombre = models.CharField(max_length=200)
+    email = models.EmailField()
+    telefono = models.IntegerField()
+    fecha_ingreso = models.DateField()
+    sexo = models.CharField(max_length=20)
+    cliente_id = models.ForeignKey(Cliente, on_delete=models.CASCADE)
+    estado_id = models.ForeignKey(Estado, on_delete=models.CASCADE)
+    estapa_id = models.ForeignKey(Etapa, on_delete=models.CASCADE)
+    
+    def __str__(self):
+        return self.nombre
     
     
 #-----------------------
