@@ -35,13 +35,13 @@ class Cliente(models.Model):
         return self.nombre_empresa
     
 class Estado(models.Model):
-    estado = models.CharField(choices=estado, max_length=50)
+    estado = models.CharField(max_length=50)
     
     def __str__(self):
         return self.estado
 
 class Etapa(models.Model):
-    etapa = models.CharField(choices=etapa, max_length=50)
+    etapa = models.CharField(max_length=50)
     
     def __str__(self):
         return self.etapa
