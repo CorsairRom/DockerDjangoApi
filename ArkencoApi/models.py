@@ -34,7 +34,7 @@ class Cliente(models.Model):
     rut = models.CharField(primary_key=True, max_length=12)
     direccion = models.CharField(max_length=200)
     telefono = models.IntegerField()
-    user = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+    # user = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     
     def __str__(self):
         return self.nombre_empresa
