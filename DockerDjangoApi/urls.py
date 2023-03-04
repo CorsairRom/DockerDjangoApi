@@ -19,6 +19,6 @@ from ArkencoApi.Api.router import router_posts
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('ArkencoApi.urls')),
+    path('rest-api/', include('ArkencoApi.urls')),
     path('api/', include(router_posts.urls))
 ]
