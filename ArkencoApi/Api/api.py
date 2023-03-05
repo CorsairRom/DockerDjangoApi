@@ -3,11 +3,42 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from ArkencoApi.Api.serializers import UsuarioSerializer, ClienteSerializer, EstadoSerializer, EtapaSerializer, ProspectoSerializer
+from ArkencoApi.Api.serializers import UsuarioSerializer, ClienteSerializer, EstadoSerializer, EtapaSerializer, ProspectoSerializer, UserSerializer
 from ArkencoApi.models import Cliente, Estado, Etapa, Prospecto, Usuario
 from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.views import ObtainAuthToken
 from django.contrib.auth import authenticate, login
+
+
+
+class Login(ObtainAuthToken):
+    
+    def post(self, request, *args, **kwargs):
+        # print(request.user)
+        login_serializer = self.serializer_class(data= request.data, context={'request': request})
+        if login_serializer.is_valid():
+            user = login_serializer.validated_data['user']
+            print(user)
+            if user.is_active:
+                token, created =  Token.objects.get_or_create(user=user)
+                user_serializer = UserSerializer(user)
+                if created:
+                    return Response({'token' : token.key,
+                                     'message': "Token creado", 
+                                     'user': user_serializer.data
+                                     }, status = status.HTTP_201_CREATED)
+                else:
+                    token.delete()
+                    token = Token.objects.create(user = user)
+                    return Response({'token' : token.key,
+                                     'message': "Token creado", 
+                                     'user': user_serializer.data
+                                     }, status = status.HTTP_201_CREATED)
+            else:
+                return Response({'error': "Ya tiene una sesion activa"}, status = status.HTTP_401_UNAUTHORIZED)
+        else:
+            return Response({'error': "Credenciales invalidas"})
+        return Response({'message': " Hola desde response"}, status= status.HTTP_200_OK)
 
 
 
@@ -157,7 +188,7 @@ def etapa_api_view(request):
         return Response(etapa_serializer.data , status=status.HTTP_200_OK)
     
 class ejemplo_api(APIView):
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
    
     def get(self, request):
         print('request:')

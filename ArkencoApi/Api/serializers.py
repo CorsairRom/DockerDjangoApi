@@ -2,6 +2,14 @@ from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 from ArkencoApi.models import Usuario, Cliente, Prospecto, Estado, Etapa
 from ArkencoApi.Rut import validarRut
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('username', 'email')
 
 class UsuarioSerializer(ModelSerializer):
     
