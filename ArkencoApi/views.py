@@ -5,37 +5,9 @@ from django.http import HttpResponse
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 import json
-from .models import Usuario, Cliente, Prospecto, Estado, Etapa
-
-
-class ClienteView(View):
-    @method_decorator(csrf_exempt)
-    def dispatch(self, request, *args, **kwargs):
-        return super().dispatch(request, *args, **kwargs)
-    
-    def get(self, request):
-        clientes = list(Cliente.objects.values())
-        if len(clientes) > 0:
-            datos = {
-                'message': 'Success',
-                'Clientes' : clientes
-            }
-        else:
-            datos = { 'message': "No Data Found..."}
-        return JsonResponse(datos)
-
-    def post(self, request):
-        jsonData =  json.loads(request.body)
-        
-        datos = { 'message': "No Data Found..."}
-        return JsonResponse(datos)
-    
-    def put(self, request):
-        pass
-    
-    def delete(self, request):
-        pass
-    
+from .models import Usuario
+ 
+#metodo api para usar token, en este caso usamos una exeption para pasar la validacion
 class UsuarioView(View):
     @method_decorator(csrf_exempt)
     def dispatch(self, request, *args, **kwargs):

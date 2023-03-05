@@ -15,10 +15,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from ArkencoApi.Api.router import router_posts
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('rest-api/', include('ArkencoApi.urls')),
-    path('api/', include(router_posts.urls))
+    path('api/', include('ArkencoApi.Api.urls'))
 ]

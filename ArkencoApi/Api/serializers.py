@@ -1,5 +1,7 @@
+from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 from ArkencoApi.models import Usuario, Cliente, Prospecto, Estado, Etapa
+from ArkencoApi.Rut import validarRut
 
 class UsuarioSerializer(ModelSerializer):
     
@@ -7,11 +9,18 @@ class UsuarioSerializer(ModelSerializer):
         model = Usuario
         fields = '__all__'
         
+        
 class ClienteSerializer(ModelSerializer):
     
     class Meta:
         model = Cliente
         fields = '__all__'
+        
+    def validate_rut(self, value):
+        rut = value
+        if validarRut(str(rut)) == False:
+            raise serializers.ValidationError("Rut inválido")
+        return value
         
 class ProspectoSerializer(ModelSerializer):
     
