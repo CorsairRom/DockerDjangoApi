@@ -6,6 +6,7 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 import json
 from .models import Usuario
+
  
 #metodo api para usar token, en este caso usamos una exeption para pasar la validacion
 class UsuarioView(View):

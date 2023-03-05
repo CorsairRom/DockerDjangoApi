@@ -1,9 +1,13 @@
-from rest_framework.views import APIView
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from ArkencoApi.Api.serializers import UsuarioSerializer, ClienteSerializer, EstadoSerializer, EtapaSerializer, ProspectoSerializer
 from ArkencoApi.models import Cliente, Estado, Etapa, Prospecto, Usuario
+from rest_framework.authtoken.models import Token
+from rest_framework.authtoken.views import ObtainAuthToken
+from django.contrib.auth import authenticate, login
 
 
 
@@ -18,6 +22,7 @@ def user_api_view(request):
     #create user
     elif request.method == 'POST':
         user_serializer = UsuarioSerializer(data=request.data)
+        
         if user_serializer.is_valid():
             user_serializer.save()
             return Response(user_serializer.data, status=status.HTTP_201_CREATED)
@@ -150,3 +155,26 @@ def etapa_api_view(request):
         etapa = Etapa.objects.all()
         etapa_serializer = EtapaSerializer(etapa, many=True)
         return Response(etapa_serializer.data , status=status.HTTP_200_OK)
+    
+class ejemplo_api(APIView):
+    # permission_classes = [IsAuthenticated]
+   
+    def get(self, request):
+        print('request:')
+        print(request.user)
+        ctx = {
+            'status':"Tiene Permisos"
+        }
+        return Response(ctx)
+    
+class LoginView(APIView):
+    def post(self, request):
+        username = request.data.get('username')
+        password = request.data.get('password')
+        user = authenticate(request, username=username, password=password)
+        if user:
+            token, created = Token.objects.get_or_create(user=user)
+            login(request, user)
+            return Response({'token': token.key})
+        else:
+            return Response({'error': 'Invalid Credentials'}, status=status.HTTP_401_UNAUTHORIZED)
