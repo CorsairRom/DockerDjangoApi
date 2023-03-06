@@ -189,25 +189,3 @@ def etapa_api_view(request):
         etapa_serializer = EtapaSerializer(etapa, many=True)
         return Response(etapa_serializer.data , status=status.HTTP_200_OK)
     
-class ejemplo_api(APIView):
-    permission_classes = [IsAuthenticated]
-   
-    def get(self, request):
-        print('request:')
-        print(request.user)
-        ctx = {
-            'status':"Tiene Permisos"
-        }
-        return Response(ctx)
-    
-class LoginView(APIView):
-    def post(self, request):
-        username = request.data.get('username')
-        password = request.data.get('password')
-        user = authenticate(request, username=username, password=password)
-        if user:
-            token, created = Token.objects.get_or_create(user=user)
-            login(request, user)
-            return Response({'token': token.key})
-        else:
-            return Response({'error': 'Invalid Credentials'}, status=status.HTTP_401_UNAUTHORIZED)
