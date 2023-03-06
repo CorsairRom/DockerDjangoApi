@@ -2,7 +2,7 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from ArkencoApi.Api.serializers import UsuarioSerializer, ClienteSerializer, EstadoSerializer, EtapaSerializer, ProspectoSerializer, UserSerializer
 from ArkencoApi.models import Cliente, Estado, Etapa, Prospecto, Usuario
 from rest_framework.authtoken.models import Token
@@ -10,7 +10,7 @@ from rest_framework.authtoken.views import ObtainAuthToken
 from django.contrib.auth import authenticate, login
 
 
-
+#---iniciar session y crear token para usar en la peticiones de cliente con el super usuario creado
 class Login(ObtainAuthToken):
     
     def post(self, request, *args, **kwargs):
@@ -38,8 +38,6 @@ class Login(ObtainAuthToken):
                 return Response({'error': "Ya tiene una sesion activa"}, status = status.HTTP_401_UNAUTHORIZED)
         else:
             return Response({'error': "Credenciales invalidas"})
-        return Response({'message': " Hola desde response"}, status= status.HTTP_200_OK)
-
 
 
 # ------------------User Api---------------
@@ -87,11 +85,14 @@ def user_detail_view(request, id):
 
 # ------------------Client Api---------------
 @api_view(['GET', 'POST'])
+@permission_classes([IsAuthenticated])
 def client_api_view(request):
     #list client
+    
     if request.method == 'GET':
         client = Cliente.objects.all()
         client_serializer = ClienteSerializer(client, many=True)
+        
         return Response(client_serializer.data , status=status.HTTP_200_OK)
     #create client
     elif request.method == 'POST':
@@ -102,6 +103,7 @@ def client_api_view(request):
         return Response(client_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 @api_view(['GET', 'PUT', 'DELETE'])
+@permission_classes([IsAuthenticated])
 def client_detail_view(request,rut):
     #queryset client
     client = Cliente.objects.filter(rut = rut).first()

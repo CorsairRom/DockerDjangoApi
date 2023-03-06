@@ -8,7 +8,7 @@ import json
 from .models import Usuario
 
  
-#metodo api para usar token, en este caso usamos una exeption para pasar la validacion
+# Ejemplo metodo antiguo
 class UsuarioView(View):
     @method_decorator(csrf_exempt)
     def dispatch(self, request, *args, **kwargs):

@@ -42,10 +42,6 @@ class Cliente(models.Model):
     def __str__(self):
         return self.nombre_empresa
 
-
-
-
-
 class Estado(models.Model):
     estado = models.CharField(max_length=50)
     
