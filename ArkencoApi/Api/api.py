@@ -6,38 +6,38 @@ from rest_framework.decorators import api_view, permission_classes
 from ArkencoApi.Api.serializers import UsuarioSerializer, ClienteSerializer, EstadoSerializer, EtapaSerializer, ProspectoSerializer, UserSerializer
 from ArkencoApi.models import Cliente, Estado, Etapa, Prospecto, Usuario
 from rest_framework.authtoken.models import Token
-from rest_framework.authtoken.views import ObtainAuthToken
+# from rest_framework.authtoken.views import ObtainAuthToken
 from django.contrib.auth import authenticate, login
 
 
 #---iniciar session y crear token para usar en la peticiones de cliente con el super usuario creado
-class Login(ObtainAuthToken):
+# class Login(ObtainAuthToken):
     
-    def post(self, request, *args, **kwargs):
-        # print(request.user)
-        login_serializer = self.serializer_class(data= request.data, context={'request': request})
-        if login_serializer.is_valid():
-            user = login_serializer.validated_data['user']
-            print(user)
-            if user.is_active:
-                token, created =  Token.objects.get_or_create(user=user)
-                user_serializer = UserSerializer(user)
-                if created:
-                    return Response({'token' : token.key,
-                                     'message': "Token creado", 
-                                     'user': user_serializer.data
-                                     }, status = status.HTTP_201_CREATED)
-                else:
-                    token.delete()
-                    token = Token.objects.create(user = user)
-                    return Response({'token' : token.key,
-                                     'message': "Token creado", 
-                                     'user': user_serializer.data
-                                     }, status = status.HTTP_201_CREATED)
-            else:
-                return Response({'error': "Ya tiene una sesion activa"}, status = status.HTTP_401_UNAUTHORIZED)
-        else:
-            return Response({'error': "Credenciales invalidas"})
+#     def post(self, request, *args, **kwargs):
+#         # print(request.user)
+#         login_serializer = self.serializer_class(data= request.data, context={'request': request})
+#         if login_serializer.is_valid():
+#             user = login_serializer.validated_data['user']
+#             print(user)
+#             if user.is_active:
+#                 token, created =  Token.objects.get_or_create(user=user)
+#                 user_serializer = UserSerializer(user)
+#                 if created:
+#                     return Response({'token' : token.key,
+#                                      'message': "Token creado", 
+#                                      'user': user_serializer.data
+#                                      }, status = status.HTTP_201_CREATED)
+#                 else:
+#                     token.delete()
+#                     token = Token.objects.create(user = user)
+#                     return Response({'token' : token.key,
+#                                      'message': "Token creado", 
+#                                      'user': user_serializer.data
+#                                      }, status = status.HTTP_201_CREATED)
+#             else:
+#                 return Response({'error': "Ya tiene una sesion activa"}, status = status.HTTP_401_UNAUTHORIZED)
+#         else:
+#             return Response({'error': "Credenciales invalidas"})
 
 
 # ------------------User Api---------------
